@@ -11,7 +11,7 @@ const {check} = require('express-validator');
 router.post('/',
     auth,
     [
-        check('nombre','El nombre del proyecto').not().isEmpty()
+        check('nombre','El nombre del proyecto es obligatorio').not().isEmpty()
     ],
     proyectoController.crearProyecto
 

@@ -14,6 +14,7 @@ exports.autenticarUsuario = async (req, res) =>{
          return res.status(400).json({errores: errores.array()})
      }
      
+    //  console.log(req.body);
 
      //Extraer el email y password
 
@@ -25,14 +26,14 @@ exports.autenticarUsuario = async (req, res) =>{
         let usuario= await Usuario.findOne({email});
         //si el user no existe
         if(!usuario){
-            return res.status(400).json({msg: 'usuario no existe'})
+            return res.status(400).json({msg: 'Este usuario no existe'})
         }
 
         //Revisar el password
         const passCorrecto = await bcryptjs.compare(password, usuario.password);
         //si el password no es correcto
         if(!passCorrecto){
-            return res.status(400).json({msg:'Password Incorrecto'});
+            return res.status(400).json({msg: 'Password incorrecto'});
         }
 
         //Si todo es correcto crear y firmar el jwt
@@ -61,5 +62,21 @@ exports.autenticarUsuario = async (req, res) =>{
       res.status(400).send("Hubo un error");
     }
   
+
+}
+
+exports.usuarioAutenticado = async (req, res)=>{
+
+
+  try {
+    
+    const usuario = await Usuario.findById(req.usuario.id).select('-password');
+    res.json({usuario});
+
+  } catch (error) {
+    console.log(error)
+    res.status(500).json({msg: 'hubo un error'})
+  }
+
 
 }
